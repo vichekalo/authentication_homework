@@ -18,23 +18,31 @@ use App\Http\Controllers\PostController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/register',[UserController::class,'register']);
+Route::post('/signup',[UserController::class,'signup']);
+Route::post('/login',[UserController::class,'login']);
+
 //Public toutes (user)
 Route::get('users',[UserController::class,'index']);
 Route::get('users/{id}',[UserController::class,'show']);
 //Private
 Route::group(['middleware'=>['auth:sanctum']],function(){
+    Route::post('/logout',[UserController::class,'logout']);
     Route::post('users',[UserController::class,'store']);
     Route::put('users/{id}',[UserController::class,'update']);
     Route::delete('users/{id}',[UserController::class,'destroy']);
 });
 
-
-/// Post
+//-------post----
 Route::get('posts',[PostController::class,'index']);
 Route::get('posts/{id}',[PostController::class,'show']);
-//Private
-Route::post('posts',[PostController::class,'store']);
-Route::put('posts/{id}',[PostController::class,'update']);
-Route::delete('posts/{id}',[PostController::class,'destroy']);
+
+Route::group(['middleware'=>['auth:sanctum']],function(){
+    Route::post('/logout',[PostController::class,'logout']);
+    Route::post('posts',[PostController::class,'store']);
+    Route::put('posts/{id}',[PostController::class,'update']);
+    Route::delete('posts/{id}',[PostController::class,'destroy']);
+});
 
 
